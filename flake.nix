@@ -7,6 +7,10 @@
       url = "github:nix-community/nixos-generators/8ee78470029e641cddbd8721496da1316b47d3b4";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    sops-nix = {
+      url = "github:Mic92/sops-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     # my-modules = {
     #   url = "github:joshleecreates/nix-modules/main";
     #   flake = false;
@@ -19,6 +23,7 @@
   outputs = {
     self,
     nixpkgs,
+    sops-nix,
     nixos-generators,
     ...
   } @ inputs: let
@@ -27,13 +32,18 @@
     hostsDir = ./hosts;
     readHost = file: import (hostsDir + ("/" + file));
     hostFiles = lib.filter (file: lib.hasSuffix ".nix" file) (lib.attrNames (builtins.readDir hostsDir));
+    secrets = import ./secrets.nix;
 
     # Generate NixOS configurations for each host
     hostDefinitions = builtins.map (file: readHost file) hostFiles;
     makeSystem = host:
       lib.nixosSystem {
         system = "x86_64-linux";
-        modules = [host];
+        modules = [
+          sops-nix.nixosModules.sops
+          secrets
+          host
+        ];
       };
 
     systems = builtins.map makeSystem hostDefinitions;
@@ -68,6 +78,8 @@
             # set disk size to to 20G
             # virtualisation.diskSize = 20 * 1024;
           }
+          sops-nix.nixosModules.sops
+          secrets
           value
         ];
         format = "proxmox";
