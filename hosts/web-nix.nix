@@ -4,7 +4,6 @@
   ...
 }: let
   uwu.tools.crt = ../certs/uwu.tools.crt;
-  uwu.tools.key = "/run/secrets.d/${config.networking.hostName}/uwu.tools.key";
 in {
   imports = [
     ../templates/server.nix
