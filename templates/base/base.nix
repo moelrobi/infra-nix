@@ -33,6 +33,8 @@
     unzip
   ];
 
+  sops.age.keyFile = "/etc/sops/age/keys.txt";
+
   programs.zsh.enable = true;
 
   security.sudo.wheelNeedsPassword = false;

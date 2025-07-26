@@ -1,5 +1,12 @@
+keys:
+- &users:
+  - &rob age1af0n2q8w4yde9cy4z9hg6llshjpleqty6szfxql4wlgnew3whfts9mvsja
+- &hosts:
+  - &web-nix age1j6t7nml4hrqak9myv7x2w0e4yv079fyx57fcq3l2av2xhadxzy6s0sfm3l
+
 creation_rules:
   - path_regex: secrets/.*$
     key_groups:
       - age:
-        - age1af0n2q8w4yde9cy4z9hg6llshjpleqty6szfxql4wlgnew3whfts9mvsja
+        - *rob
+        - *web-nix

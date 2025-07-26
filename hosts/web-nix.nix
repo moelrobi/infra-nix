@@ -2,7 +2,10 @@
   config,
   lib,
   ...
-}: {
+}: let
+  uwu.tools.crt = ../certs/uwu.tools.crt;
+  uwu.tools.key = "/run/secrets.d/${config.networking.hostName}/uwu.tools.key";
+in {
   imports = [
     ../templates/server.nix
   ];
@@ -10,12 +13,19 @@
   networking.hostName = "web-nix";
   networking.fqdn = "web-nix.uwu.tools";
 
+  sops.overrides = {
+    "uwu.tools.key" = {
+      mode = "0400";
+      owner = "nginx";
+    };
+  };
+
   # Enable Nginx service
   services.nginx.enable = true;
   services.nginx.virtualHosts."i.uwu.tools" = {
-    enableSSL = true;
-    sslCertificate = builtins.readFile ../certs/uwu.tools.crt;
-    sslCertificateKey = config.sops.secrets."uwu.tools.key".path;
+    forceSSL = true;
+    sslCertificate = uwu.tools.crt;
+    sslCertificateKey = uwu.tools.key;
 
     locations."/" = {
       proxyPass = "http://localhost:3000";

@@ -41,8 +41,8 @@
         system = "x86_64-linux";
         modules = [
           sops-nix.nixosModules.sops
-          secrets
           host
+          secrets
         ];
       };
 
@@ -79,8 +79,8 @@
             # virtualisation.diskSize = 20 * 1024;
           }
           sops-nix.nixosModules.sops
-          secrets
           value
+          secrets
         ];
         format = "proxmox";
       };
