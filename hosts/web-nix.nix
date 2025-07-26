@@ -25,7 +25,7 @@ in {
   services.nginx.virtualHosts."i.uwu.tools" = {
     forceSSL = true;
     sslCertificate = uwu.tools.crt;
-    sslCertificateKey = uwu.tools.key;
+    sslCertificateKey = config.sops.secrets."${config.networking.hostName}/uwu.tools.key".path;
 
     locations."/" = {
       proxyPass = "http://localhost:3000";
