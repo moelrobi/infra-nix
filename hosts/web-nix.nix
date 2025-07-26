@@ -14,7 +14,7 @@
   services.nginx.enable = true;
   services.nginx.virtualHosts."i.uwu.tools" = {
     enableSSL = true;
-    sslCertificate = builtins.readFile ./certs/uwu.tools.crt;
+    sslCertificate = builtins.readFile ../certs/uwu.tools.crt;
     sslCertificateKey = config.sops.secrets."uwu.tools.key".path;
 
     locations."/" = {
