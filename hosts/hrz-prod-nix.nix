@@ -1,5 +1,4 @@
 # Horizon Production Server Configuration
-
 {
   config,
   lib,

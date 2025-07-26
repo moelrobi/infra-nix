@@ -11,7 +11,7 @@ After that, deploy the image to the proxmox Cluster. Dont forget to set unique F
 
 Generate a new public key from the SSH-Host Key:
 ```
-nix-shell -p ssh-to-age --run 'cat /etc/ssh/ssh_host_ed25519_key.pub | ssh-to-age
+nix-shell -p ssh-to-age --run 'cat /etc/ssh/ssh_host_ed25519_key.pub | ssh-to-age'
 ```
 
 put the output to `.sops.yaml` under hosts.

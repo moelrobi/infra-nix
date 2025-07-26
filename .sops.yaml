@@ -3,10 +3,16 @@ keys:
   - &rob age1af0n2q8w4yde9cy4z9hg6llshjpleqty6szfxql4wlgnew3whfts9mvsja
 - &hosts:
   - &web-nix age1j6t7nml4hrqak9myv7x2w0e4yv079fyx57fcq3l2av2xhadxzy6s0sfm3l
+  - &hrz-prod-nix age1tl2x3ujj7scg39gd80we9xzmu29shr9zw5vm5dfqk8myq00qru7qwmr9hw
 
 creation_rules:
-  - path_regex: secrets/.*$
+  - path_regex: secrets/web-nix/.*$
     key_groups:
       - age:
         - *rob
         - *web-nix
+  - path_regex: secrets/hrz-prod-nix/.*$
+    key_groups:
+      - age:
+        - *rob
+        - *hrz-prod-nix
