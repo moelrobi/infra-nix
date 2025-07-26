@@ -16,8 +16,12 @@
     # };
   };
 
-  outputs = { self, nixpkgs, nixos-generators, ... }@inputs: 
-  let 
+  outputs = {
+    self,
+    nixpkgs,
+    nixos-generators,
+    ...
+  } @ inputs: let
     lib = nixpkgs.lib;
 
     hostsDir = ./hosts;
@@ -26,31 +30,37 @@
 
     # Generate NixOS configurations for each host
     hostDefinitions = builtins.map (file: readHost file) hostFiles;
-    makeSystem = host: lib.nixosSystem {
-      system = "x86_64-linux";
-      modules = [ host ];
-    };
+    makeSystem = host:
+      lib.nixosSystem {
+        system = "x86_64-linux";
+        modules = [host];
+      };
 
     systems = builtins.map makeSystem hostDefinitions;
 
     configurations = lib.listToAttrs (builtins.map (host: {
-      name = host.config.networking.hostName;
-      value = host;
-    }) systems);
-    
+        name = host.config.networking.hostName;
+        value = host;
+      })
+      systems);
+
     # Generate Proxmox images for each host
     fileToHostname = file: lib.removeSuffix ".nix" file;
-    hostFilePairs = builtins.map (file: { 
-      name = fileToHostname file; 
-      value = readHost file;
-    }) hostFiles;
+    hostFilePairs =
+      builtins.map (file: {
+        name = fileToHostname file;
+        value = readHost file;
+      })
+      hostFiles;
 
-
-    makeProxmoxImage = { name, value }: {
+    makeProxmoxImage = {
+      name,
+      value,
+    }: {
       inherit name;
       value = nixos-generators.nixosGenerate {
         system = "x86_64-linux";
-        modules = [ 
+        modules = [
           {
             # Pin nixpkgs to the flake input, so that the packages installed
             # come from the flake inputs.nixpkgs.url.
@@ -63,10 +73,14 @@
         format = "proxmox";
       };
     };
-    
+
     proxmoxImages = lib.listToAttrs (builtins.map makeProxmoxImage hostFilePairs);
-  in
-  {
+  in {
+    nixosModules = {
+      server = ./templates/server.nix;
+      nginx = ./templates/nginx/nginx.nix;
+    };
+
     nixosConfigurations = configurations;
     packages."x86_64-linux" = proxmoxImages;
   };

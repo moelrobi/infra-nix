@@ -1,47 +1,55 @@
-{ config, pkgs, modulesPath, lib, system, ... }:
-
 {
-    imports = [
-        "${modulesPath}/profiles/qemu-guest.nix"
-    ];
+  config,
+  pkgs,
+  modulesPath,
+  lib,
+  system,
+  ...
+}: {
+  imports = [
+    "${modulesPath}/profiles/qemu-guest.nix"
+  ];
 
-    networking.fqdn = lib.mkDefault "base.uwu.tools";
-    
-    boot.growPartition = true;
+  networking.fqdn = lib.mkDefault "base.uwu.tools";
 
-    services.qemuGuest.enable = true;
+  boot.growPartition = true;
 
-    boot.loader.grub.enable = true;
+  services.qemuGuest.enable = true;
 
-    nix.settings.trusted-users = [ "root" "@wheel" ];
-    nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  boot.loader.grub.enable = true;
+  boot.loader.grub.devices = ["nodev"];
 
-    environment.systemPackages = with pkgs; [
-        vim
-        git
-        curl
-        wget
-        htop
-        jq
-        tmux
-        unzip
-    ];
+  nix.settings.trusted-users = ["root" "@wheel"];
+  nix.settings.experimental-features = ["nix-command" "flakes"];
 
-    programs.zsh.enable = true;
+  environment.systemPackages = with pkgs; [
+    vim
+    git
+    curl
+    wget
+    htop
+    jq
+    tmux
+    unzip
+  ];
 
-    security.sudo.wheelNeedsPassword = false;
+  programs.zsh.enable = true;
 
-    services.openssh.enable = true;
-    services.openssh.permitRootLogin = "prohibit-password";
-    services.openssh.settings.PasswordAuthentication = false;
-    services.openssh.settings.KbdInteractiveAuthentication = false;
+  security.sudo.wheelNeedsPassword = false;
 
-    fileSystems."/" = lib.mkDefault {
-        device = "/dev/disk/by-label/nixos";
-        fsType = "ext4";
-        options = [ "noatime" ];
-        autoResize = true;
-    };
+  services.openssh.enable = true;
+  services.openssh.permitRootLogin = "prohibit-password";
+  services.openssh.settings.PasswordAuthentication = false;
+  services.openssh.settings.KbdInteractiveAuthentication = false;
 
-    system.stateVersion = "25.05";
+  time.timeZone = "Europe/Berlin";
+
+  fileSystems."/" = lib.mkDefault {
+    device = "/dev/disk/by-label/nixos";
+    fsType = "ext4";
+    options = ["noatime"];
+    autoResize = true;
+  };
+
+  system.stateVersion = "25.05";
 }
