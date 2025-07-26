@@ -46,6 +46,15 @@ in {
   services.nginx = {
     enable = true;
     virtualHosts = {
+      "discord.scprp.de" = {
+        forceSSL = true;
+        sslCertificate = scprp.de.crt;
+        sslCertificateKey = config.sops.secrets."web-nix/scprp.de.key".path;
+        locations."/" = {
+          return = "301 https://discord.gg/kmMmfxnnZY";
+        };
+      };
+
       # vw.uwu.tools → password.uwu.tools
       "vw.uwu.tools" = {
         forceSSL = true;
