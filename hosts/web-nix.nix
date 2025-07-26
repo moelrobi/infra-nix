@@ -45,7 +45,31 @@ in {
   # Enable Nginx service
   services.nginx = {
     enable = true;
+    clientMaxBodySize = "10M";
     virtualHosts = {
+      # Default virtual host
+      "_" = {
+        addSSL = true;
+        sslCertificate = uwu.tools.crt;
+        sslCertificateKey = config.sops.secrets."web-nix/uwu.tools.key".path;
+        locations."/" = {
+          return = "404";
+        };
+      };
+
+      "mail.uwu.tools" = {
+        addSSL = false;
+        locations."/" = {
+          return = "401";
+        };
+
+        locations.".well-known/" = {
+          proxyPass = "http://mail.uwu.tools/.well-known/";
+          recommendedProxySettings = true;
+        };
+      };
+
+      # Redirect rules
       "discord.scprp.de" = {
         forceSSL = true;
         sslCertificate = scprp.de.crt;
@@ -55,6 +79,7 @@ in {
         };
       };
 
+      # Reverse proxy rules
       # vw.uwu.tools → password.uwu.tools
       "vw.uwu.tools" = {
         forceSSL = true;
@@ -62,6 +87,7 @@ in {
         sslCertificateKey = config.sops.secrets."web-nix/uwu.tools.key".path;
         locations."/" = {
           proxyPass = "http://password.uwu.tools";
+          recommendedProxySettings = true;
         };
       };
 
@@ -72,6 +98,7 @@ in {
         sslCertificateKey = config.sops.secrets."web-nix/scprp.de.key".path;
         locations."/" = {
           proxyPass = "http://wekan.uwu.tools";
+          recommendedProxySettings = true;
         };
       };
 
@@ -80,8 +107,12 @@ in {
         forceSSL = true;
         sslCertificate = uwu.tools.crt;
         sslCertificateKey = config.sops.secrets."web-nix/uwu.tools.key".path;
+        extraConfig = ''
+          client_max_body_size 100M;
+        '';
         locations."/" = {
           proxyPass = "http://xbb-rob.uwu.tools";
+          recommendedProxySettings = true;
         };
       };
 
@@ -90,8 +121,12 @@ in {
         forceSSL = true;
         sslCertificate = enraiser.at.crt;
         sslCertificateKey = config.sops.secrets."web-nix/enraiser.at.key".path;
+        extraConfig = ''
+          client_max_body_size 100M;
+        '';
         locations."/" = {
           proxyPass = "http://xbb-enraiser.uwu.tools";
+          recommendedProxySettings = true;
         };
       };
 
@@ -100,8 +135,12 @@ in {
         forceSSL = true;
         sslCertificate = snoks.net.crt;
         sslCertificateKey = config.sops.secrets."web-nix/snoks.net.key".path;
+        extraConfig = ''
+          client_max_body_size 100M;
+        '';
         locations."/" = {
           proxyPass = "http://xbb-snokie.uwu.tools";
+          recommendedProxySettings = true;
         };
       };
 
@@ -112,6 +151,7 @@ in {
         sslCertificateKey = config.sops.secrets."web-nix/uwu.tools.key".path;
         locations."/" = {
           proxyPass = "http://gmod-web.uwu.tools";
+          recommendedProxySettings = true;
         };
       };
 
@@ -120,8 +160,12 @@ in {
         forceSSL = true;
         sslCertificate = uwu.tools.crt;
         sslCertificateKey = config.sops.secrets."web-nix/uwu.tools.key".path;
+        extraConfig = ''
+          client_max_body_size 100M;
+        '';
         locations."/" = {
           proxyPass = "http://livesync.uwu.tools:5984";
+          recommendedProxySettings = true;
         };
       };
 
@@ -130,8 +174,12 @@ in {
         forceSSL = true;
         sslCertificate = scprp.de.crt;
         sslCertificateKey = config.sops.secrets."web-nix/scprp.de.key".path;
+        extraConfig = ''
+          client_max_body_size 100M;
+        '';
         locations."/" = {
           proxyPass = "http://gitea.uwu.tools";
+          recommendedProxySettings = true;
         };
       };
 
@@ -142,6 +190,7 @@ in {
         sslCertificateKey = config.sops.secrets."web-nix/scprp.de.key".path;
         locations."/" = {
           proxyPass = "http://woltlab.uwu.tools";
+          recommendedProxySettings = true;
         };
       };
     };
