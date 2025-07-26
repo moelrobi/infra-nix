@@ -12,6 +12,8 @@ in {
   networking.hostName = "web-nix";
   networking.fqdn = "web-nix.uwu.tools";
 
+  networking.firewall.allowedTCPPorts = [80 443];
+
   sops.overrides = {
     "uwu.tools.key" = {
       mode = "0400";
