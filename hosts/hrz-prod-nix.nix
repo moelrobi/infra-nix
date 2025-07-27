@@ -73,26 +73,24 @@ in {
   #     SECRETS_JSON=/run/secrets/hrz-prod-nix/secrets
 
   #     # Secrets aus JSON lesen
-  #     GITEA_PW=$(jq -r '.gitea_password'    $SECRETS_JSON)
-  #     PROD_DB=$(jq -r '.prod_db_password'   $SECRETS_JSON)
+  #     GITEA_PW=$(${pkgs.jq}/bin/jq -r '.gitea_password'    $SECRETS_JSON)
+  #     PROD_DB=$(${pkgs.jq}/bin/jq -r '.prod_db_password'   $SECRETS_JSON)
 
   #     mkdir -p /opt/horizon/garrysmod/lua/bin
-  #     cp -r ${horizonBin}/opt/horizon/garrysmod/lua/bin/* \
+  #     cp -r ${horizonBin}/bin/* \
   #        /opt/horizon/garrysmod/lua/bin
 
-  #     BASE="https://hrzn:\$\{GITEA_PW\}@git.scprp.de/Horizon"
-  #     for repo in scprp helix addons scprp-weapon; do
-  #       dest="/opt/horizon/garrysmod/$(
-  #         case $repo in
-  #           scprp|helix) echo "gamemodes/$repo";;
-  #           addons)       echo "addons";;
-  #           scprp-weapon) echo "addons/scprp-weapon";;
-  #         esac
-  #       )"
-  #       rm -rf $dest
-  #       mkdir -p $dest
-  #       git clone "\$\{BASE\}/\$\{repo\}.git" "$dest"
-  #     done
+  #     rm -rf /opt/horizon/garrysmod/gamemodes/scprp
+  #     rm -rf /opt/horizon/garrysmod/gamemodes/helix
+  #     rm -rf /opt/horizon/garrysmod/addons/scprp-weapon
+  #     rm -rf /opt/horizon/garrysmod/addons/
+
+  #     echo $GITEA_PW
+
+  #     ${pkgs.git}/bin/git clone https://hrzn:$GITEA_PW@git.scprp.de/Horizon/scprp.git               /opt/horizon/garrysmod/gamemodes/scprp
+  #     ${pkgs.git}/bin/git clone https://hrzn:$GITEA_PW@git.scprp.de/Horizon/helix.git               /opt/horizon/garrysmod/gamemodes/helix
+  #     ${pkgs.git}/bin/git clone https://hrzn:$GITEA_PW@git.scprp.de/Horizon/addons.git              /opt/horizon/garrysmod/addons
+  #     ${pkgs.git}/bin/git clone https://hrzn:$GITEA_PW@git.scprp.de/Horizon/scprp-weapon.git        /opt/horizon/garrysmod/addons/scprp-weapon
 
   #     mkdir -p /opt/horizon/garrysmod/cfg
   #     mkdir -p /opt/horizon/garrysmod/gamemodes/helix
