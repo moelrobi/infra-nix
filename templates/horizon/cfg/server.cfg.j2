@@ -1,0 +1,14 @@
+// General
+hostname {{ sv_hostname }}
+rcon_password ""
+sv_password {{ sv_password | default("") }}
+sv_downloadurl "https://gmod.uwu.tools/fastdl"
+sv_loadingurl "https://gmod.uwu.tools/view?steamid=%s"
+sv_allowupload 0
+sv_allowdownload 0
+sv_allowcslua 0
+sv_cheats 0
+sv_hibernate_think 0
+sv_location "de"
+sv_region 255
+hrz_environment {{ hrz_environment | default("unkown") }}
